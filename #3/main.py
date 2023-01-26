@@ -39,13 +39,13 @@ if __name__ == '__main__':
             if event.type == pg.QUIT:
                 f = False
             if event.type == pg.KEYDOWN:
-                if event.key == pg.K_PAGEUP:
+                if event.key == pg.K_UP:
                     if delta * STEP <= 45:
                         delta *= STEP
                         save_map(ADRESS, PATH, delta0=delta)
                         screen.blit(pg.image.load(PATH), (0, 0))
                         pg.display.flip()
-                if event.key == pg.K_PAGEDOWN:
+                if event.key == pg.K_DOWN:
                     if delta / STEP > 0:
                         delta /= STEP
                         save_map(ADRESS, PATH, delta0=delta)
