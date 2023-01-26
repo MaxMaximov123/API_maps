@@ -6,7 +6,7 @@ from get_obj import get_obj
 import requests
 from PIL import Image
 
-PATH = 'data/img.png'
+PATH = 'img.png'
 delta = 10
 STEP = 1.3
 ADRESS = 'Бутлерова, Казань'
