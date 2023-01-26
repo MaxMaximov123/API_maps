@@ -6,7 +6,7 @@ from get_obj import get_obj
 import requests
 from PIL import Image
 
-PATH = 'data/img.png'
+PATH = 'img.png'
 
 
 def save_map(adress, path):
