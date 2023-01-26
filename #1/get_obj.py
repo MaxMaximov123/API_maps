@@ -3,7 +3,6 @@ import requests
 
 def get_obj(req):
     geocoder_api_server = "http://geocode-maps.yandex.ru/1.x/"
-
     geocoder_params = {
         "apikey": "40d1649f-0493-4b70-98ba-98533de7710b",
         "geocode": req,
