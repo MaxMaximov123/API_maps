@@ -52,4 +52,5 @@ if __name__ == '__main__':
                         screen.blit(pg.image.load(PATH), (0, 0))
                         pg.display.flip()
     pg.quit()
+    os.remove(PATH)
 
