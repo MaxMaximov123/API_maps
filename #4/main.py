@@ -68,7 +68,7 @@ if __name__ == '__main__':
                     if current_pos[1] < -85:
                         current_pos[1] = -85 + abs(current_pos[1]) - 85
                     save_map(f'{current_pos[0]},{current_pos[1]}', PATH, delta0=delta)
-                if event.key == pg.K_TAB:
+                if event.key == pg.K_F1:
                     slice_ind += 1
                     save_map(f'{current_pos[0]},{current_pos[1]}', PATH, delta0=delta)
     pg.quit()
