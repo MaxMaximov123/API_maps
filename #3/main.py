@@ -7,9 +7,11 @@ import requests
 from PIL import Image
 
 PATH = 'img.png'
-delta = 10
+delta = 1
 STEP = 1.3
 ADRESS = 'Бутлерова, Казань'
+current_pos, D_X, D_Y = get_obj(ADRESS)
+current_pos = list(map(float, current_pos.split(' ')))
 
 
 def save_map(adress, path, delta0=delta):
@@ -17,40 +19,53 @@ def save_map(adress, path, delta0=delta):
     x, y = obj_coodrinates.split(" ")
     map_params = {
         "ll": ",".join([x, y]),
-        "spn": ",".join([str(delta), str(delta * 3 / 4)]),
+        "spn": ",".join([str(delta), str(delta)]),
         "l": "map",
-        "pt": f"{','.join(obj_coodrinates.split())},pm2dgl"
     }
     map_api_server = "http://static-maps.yandex.ru/1.x/"
     response = requests.get(map_api_server, params=map_params)
     with open(path, 'wb') as f:
         f.write(response.content)
+    screen.blit(pg.image.load(PATH), (0, 0))
+    pg.display.flip()
 
 
 if __name__ == '__main__':
     pg.init()
-    save_map(ADRESS, PATH)
     screen = pg.display.set_mode((600, 450))
-    screen.blit(pg.image.load(PATH), (0, 0))
-    pg.display.flip()
+    save_map(f'{current_pos[0]},{current_pos[1]}', PATH)
     f = True
     while f:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 f = False
             if event.type == pg.KEYDOWN:
-                if event.key == pg.K_UP:
-                    if delta * STEP <= 45:
+                print(current_pos)
+                if event.key == pg.K_PAGEUP:
+                    if delta * STEP <= 90:
                         delta *= STEP
-                        save_map(ADRESS, PATH, delta0=delta)
-                        screen.blit(pg.image.load(PATH), (0, 0))
-                        pg.display.flip()
-                if event.key == pg.K_DOWN:
+                        save_map(f'{current_pos[0]},{current_pos[1]}', PATH, delta0=delta)
+                if event.key == pg.K_PAGEDOWN:
                     if delta / STEP > 0:
                         delta /= STEP
-                        save_map(ADRESS, PATH, delta0=delta)
-                        screen.blit(pg.image.load(PATH), (0, 0))
-                        pg.display.flip()
+                        save_map(f'{current_pos[0]},{current_pos[1]}', PATH, delta0=delta)
+                if event.key == pg.K_LEFT:
+                    current_pos[0] = (current_pos[0] + delta * 2) % 180
+                    save_map(f'{current_pos[0]},{current_pos[1]}', PATH, delta0=delta)
+                if event.key == pg.K_RIGHT:
+                    current_pos[0] = (current_pos[0] - delta * 2) % 180
+                    save_map(f'{current_pos[0]},{current_pos[1]}', PATH, delta0=delta)
+                if event.key == pg.K_UP:
+                    current_pos[1] += delta * 2
+                    if current_pos[1] > 85:
+                        current_pos[1] = -85 + (current_pos[1] - 85)
+                    save_map(f'{current_pos[0]},{current_pos[1]}', PATH, delta0=delta)
+                if event.key == pg.K_DOWN:
+                    current_pos[1] -= delta * 2
+                    if current_pos[1] < -85:
+                        current_pos[1] = -85 + abs(current_pos[1]) - 85
+
+                    save_map(f'{current_pos[0]},{current_pos[1]}', PATH, delta0=delta)
     pg.quit()
     os.remove(PATH)
 
