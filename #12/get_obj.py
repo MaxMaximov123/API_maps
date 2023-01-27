@@ -1,7 +1,6 @@
 import requests
 from pprint import pprint
 
-
 def get_obj(req):
     geocoder_api_server = "http://geocode-maps.yandex.ru/1.x/"
     geocoder_params = {
