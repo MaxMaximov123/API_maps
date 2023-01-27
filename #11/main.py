@@ -1,16 +1,13 @@
 import sys
-import json
-import pygame as pg
 import os
 from get_obj import get_obj
 import requests
 from functools import partial
-from PIL import Image
 from PyQt5.QtGui import QPixmap
 from get_organisation import get_organisation
 from PyQt5.QtCore import Qt
 from PyQt5 import uic
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QMainWindow
+from PyQt5.QtWidgets import QApplication, QMainWindow
 
 SCREEN_SIZE = [600, 450]
 
