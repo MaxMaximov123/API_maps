@@ -1,15 +1,13 @@
 import sys
-import json
-import pygame as pg
 import os
 from get_obj import get_obj
 import requests
 from functools import partial
-from PIL import Image
 from PyQt5.QtGui import QPixmap
+from get_organisation import get_organisation
 from PyQt5.QtCore import Qt
 from PyQt5 import uic
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QMainWindow
+from PyQt5.QtWidgets import QApplication, QMainWindow
 
 SCREEN_SIZE = [600, 450]
 
@@ -31,7 +29,7 @@ class Example(QMainWindow):
 		self.initUI()
 		self.save_map()
 
-	def save_map(self, point=False, addr=''):
+	def save_map(self, point=False, addr='', org_point=''):
 		address = self.lineEdit.text()
 		if addr:
 			pos, D_X, D_Y, address_obg, post_code = get_obj(addr)
@@ -58,6 +56,9 @@ class Example(QMainWindow):
 		}
 		if self.point:
 			map_params['pt'] = f"{self.point},pm2dgl"
+			if org_point:
+				map_params['pt'] += f"~{org_point},pm2orl"
+
 		map_api_server = "http://static-maps.yandex.ru/1.x/"
 		response = requests.get(map_api_server, params=map_params)
 		with open(self.path, 'wb') as img:
@@ -98,7 +99,20 @@ class Example(QMainWindow):
 			self.clear()
 			self.save_map(point=True, addr=f'{pos[0]},{pos[1]}')
 		elif event.button() == Qt.RightButton:
-			print("Правая")
+			address = self.lineEdit.text()
+			if not address:
+				self.textEdit.clear()
+				self.textEdit.insertPlainText("Введите организайию!")
+			else:
+				data_org = get_organisation(address, f'{pos[0]},{pos[1]}')
+				if data_org:
+					self.save_map(point=True, addr=f'{pos[0]},{pos[1]}', org_point=f'{data_org["point"][0]},{data_org["point"][1]}')
+					self.textEdit.clear()
+					self.textEdit.insertPlainText(data_org['text'])
+				else:
+					self.textEdit.clear()
+					self.textEdit.insertPlainText("Ничего не найдено")
+
 
 	def keyPressEvent(self, event):
 		if event.key() == Qt.Key_PageUp:
